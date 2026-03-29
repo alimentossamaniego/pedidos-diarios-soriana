@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #e8f5e0;
+      min-height: 100vh;
+    }
+
+    header {
+      background-color: #ffffff;
+      padding: 28px 20px 22px;
+      text-align: center;
+    }
+
+    .header-logo-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .header-logo-img {
+      height: 100px;
+      object-fit: contain;
+      display: block;
+      margin: 0 auto 6px;
+    }
+
+    .content {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 24px 16px 60px;
+    }
+
+    .alert-banner {
+      background-color: #fefce8;
+      border: 1.5px solid #f5d76e;
+      border-radius: 10px;
+      padding: 14px 18px;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .alert-banner .alert-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+    .alert-banner p { font-size: 13.5px; color: #78350f; line-height: 1.6; }
+    .alert-banner p strong { font-weight: 700; }
+
+    .card {
+      background: #ffffff;
+      border-radius: 14px;
+      padding: 22px 22px 26px;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.07);
+      margin-bottom: 18px;
+    }
+
+    .card-title {
+      font-size: 17px;
+      font-weight: 700;
+      color: #1a1a1a;
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+
+    @media (max-width: 520px) { .form-grid { grid-template-columns: 1fr; } }
+
+    .form-group { display: flex; flex-direction: column; gap: 5px; }
+
+    .form-group label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: #374151;
+    }
+
+    .form-group label .required { color: #ef4444; margin-left: 2px; }
+
+    .form-group input,
+    .form-group select {
+      padding: 10px 13px;
+      border: 1.5px solid #d1d5db;
+      border-radius: 8px;
+      font-size: 14px;
+      font-family: 'Inter', sans-serif;
+      color: #111827;
+      background: #fff;
+      outline: none;
+      transition: border-color 0.2s;
+      width: 100%;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus { border-color: #ff3399; }
+    .form-group input::placeholder { color: #9ca3af; }
+    .form-group.full-width { grid-column: 1 / -1; }
+
+    .products-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .badge {
+      background: #dcfce7;
+      color: #15803d;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 3px 12px;
+      border-radius: 999px;
+    }
+
+    .product-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid #f3f4f6;
+    }
+
+    .product-row:last-child { border-bottom: none; }
+
+    .product-name {
+      font-size: 14.5px;
+      color: #111827;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .product-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .qty-input {
+      width: 60px;
+      padding: 7px 10px;
+      border: 1.5px solid #d1d5db;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      text-align: center;
+      font-family: 'Inter', sans-serif;
+      color: #111827;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .qty-input:focus { border-color: #ff3399; }
+
+    /* ── BOTÓN UNIDAD (rosa) ── */
+    .cajas-btn {
+      background: #ff3399;
+      color: white;
+      border: none;
+      border-radius: 7px;
+      padding: 7px 14px;
+      font-size: 11.5px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      transition: background 0.2s;
+      min-width: 64px;
+      text-align: center;
+    }
+
+    .cajas-btn:hover { background: #d4006e; }
+    .cajas-btn:disabled { background: #f9a8d4; cursor: not-allowed; }
+
+    /* ── SIN DISPONIBILIDAD badge ── */
+    .sin-stock-badge {
+      font-size: 10px;
+      font-weight: 700;
+      background: #fee2e2;
+      color: #dc2626;
+      padding: 2px 8px;
+      border-radius: 999px;
+      letter-spacing: 0.5px;
+      font-family: 'Inter', sans-serif;
+    }
+
+    /* ── SUBMIT (rosa) ── */
+    .submit-btn {
+      width: 100%;
+      background: #ff3399;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 15px;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      transition: background 0.2s, transform 0.1s;
+      margin-top: 6px;
+    }
+
+    .submit-btn:hover { background: #d4006e; transform: translateY(-1px); }
+    .submit-btn:active { transform: translateY(0); }
+    .submit-btn:disabled { background: #f9a8d4; cursor: not-allowed; transform: none; }
+
+    /* ── LOADING STATE ── */
+    .loading-msg {
+      text-align: center;
+      padding: 32px 0;
+      color: #9ca3af;
+      font-size: 14px;
+    }
+
+    .loading-spinner {
+      width: 28px;
+      height: 28px;
+      border: 3px solid #fce7f3;
+      border-top-color: #ff3399;
+      border-radius: 50%;
+      animation: spin 0.75s linear infinite;
+      margin: 0 auto 10px;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── TOAST ── */
+    .toast {
+      position: fixed;
+      bottom: 28px;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: #1a1a1a;
+      color: #fff;
+      padding: 13px 24px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 500;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+      transition: transform 0.35s cubic-bezier(.34,1.56,.64,1);
+      z-index: 9999;
+      white-space: nowrap;
+    }
+
+    .toast.show { transform: translateX(-50%) translateY(0); }
+    .toast.success { background: #15803d; }
+    .toast.error   { background: #dc2626; }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <div class="header-logo-wrap">
+      <img
+        class="header-logo-img"
+        src="https://lh3.googleusercontent.com/d/1S9LIvTjcrdrT-3-qmOe3SG70Z9jXK3gT"
+        alt="ALISA Logo"
+        onerror="this.style.display='none';"
+      />
+    </div>
+  </header>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- ALERT BANNER -->
+    <div class="alert-banner">
+      <span class="alert-icon">⏰</span>
+      <p>
+        <strong>Favor de completar su pedido antes de las 8 am</strong> para entregarse el mismo día.
+        Los pedidos recibidos después de esta hora se surtirán por la tarde o al día siguiente.
+        ¡Gracias por su preferencia!
+      </p>
+    </div>
+
+    <!-- INFORMACIÓN DEL PEDIDO -->
+    <div class="card">
+      <div class="card-title">🗒️ Información del Pedido</div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>FECHA <span class="required">*</span></label>
+          <input type="date" id="fecha" />
+        </div>
+        <div class="form-group">
+          <label>TIENDA SORIANA <span class="required">*</span></label>
+          <select id="tienda">
+            <option value="" disabled selected>Selecciona tu tienda</option>
+            <option value="15">LÓPEZ MATEOS 15</option>
+            <option value="26">SAN LORENZO 26</option>
+            <option value="29">HENEQUÉN 29</option>
+            <option value="39">SANDERS 39</option>
+            <option value="42">PLAZA JUÁREZ 42</option>
+            <option value="70">PORVENIR 70</option>
+            <option value="85">ZARAGOZA 85</option>
+            <option value="90">ALAMEDA IGLESIAS 90</option>
+            <option value="131">SENDERO LAS TORRES 131</option>
+            <option value="154">LIBRAMIENTO CD JUÁREZ 154</option>
+            <option value="187">LA CUESTA 187</option>
+            <option value="242">SENDERO CD JUÁREZ 242</option>
+            <option value="654">TALAMAS 654</option>
+            <option value="703">RIVERA DEL LAGO 703</option>
+            <option value="708">AZTECAS 708</option>
+            <option value="712">SANTOS DUMONT 712</option>
+          </select>
+        </div>
+        <div class="form-group full-width">
+          <label>NOMBRE DEL ENCARGADO <span class="required">*</span></label>
+          <input type="text" id="encargado" placeholder="Ej. María González" />
+        </div>
+      </div>
+    </div>
+
+    <!-- PRODUCTOS -->
+    <div class="card">
+      <div class="products-header">
+        <div class="card-title" style="margin-bottom:0">🌿 Productos</div>
+        <span class="badge" id="selectedCount">0 seleccionados</span>
+      </div>
+
+      <!-- Aquí se renderizan los productos dinámicamente -->
+      <div id="productList">
+        <div class="loading-msg">
+          <div class="loading-spinner"></div>
+          Cargando productos...
+        </div>
+      </div>
+    </div>
+
+    <!-- SUBMIT -->
+    <button class="submit-btn" id="submitBtn" onclick="enviarPedido()">📤 Enviar Pedido</button>
+
+  </div>
+
+  <!-- TOAST -->
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyT-unCS_Xf9Eqn0IFlN6hyDHme2mX5GhXZK4oH3i5TpgFOF8gmn2aGGJZkwgx5GMALqQ/exec';
+
+    // Fecha de hoy automática
+    const dateInput = document.getElementById('fecha');
+    if (dateInput) dateInput.value = new Date().toISOString().split('T')[0];
+
+    // ── Contador de productos seleccionados ──────────────────────
+    function updateCount() {
+      const inputs = document.querySelectorAll('.qty-input');
+      let total = 0;
+      inputs.forEach(inp => { if ((parseFloat(inp.value) || 0) > 0) total++; });
+      document.getElementById('selectedCount').textContent = total + ' seleccionados';
+    }
+
+    // ── Prompt para ingresar cantidad con la unidad correcta ─────
+    function setCajas(btn) {
+      const input  = btn.previousElementSibling;
+      const unidad = btn.dataset.unidad || 'CAJA';
+      const val    = prompt(`Ingresa la cantidad de ${unidad} para:\n${input.dataset.product}`, input.value);
+      if (val !== null && !isNaN(val) && Number(val) >= 0) {
+        input.value = parseFloat(val) || 0;
+        updateCount();
+      }
+    }
+
+    // ── Toast ────────────────────────────────────────────────────
+    function showToast(msg, type = '') {
+      const toast = document.getElementById('toast');
+      toast.textContent = msg;
+      toast.className = 'toast ' + type;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 3500);
+    }
+
+    // ── Renderiza los productos desde el Sheet ───────────────────
+    function renderProductos(productos) {
+      const container = document.getElementById('productList');
+
+      if (!productos || productos.length === 0) {
+        container.innerHTML = '<div class="loading-msg">No se encontraron productos.</div>';
+        return;
+      }
+
+      container.innerHTML = '';
+
+      productos.forEach(item => {
+        const nombre       = String(item.producto || '').trim().toUpperCase();
+        const unidad       = String(item.unidad   || 'CAJA').trim().toUpperCase();
+        // ── ✅ NUEVO: leer emoji de columna D (fallback a 🌿 si está vacío) ──
+        const emoji        = String(item.emoji    || '').trim() || '🌿';
+        const dispRaw      = String(item.disponibilidad || 'si').trim().toLowerCase();
+        const disponible   = !(dispRaw === 'no' || dispRaw === 'false' || dispRaw === '0');
+
+        const row = document.createElement('div');
+        row.className = 'product-row';
+        if (!disponible) {
+          row.style.opacity = '0.5';
+          row.title = 'Sin disponibilidad';
+        }
+
+        // ── ✅ NUEVO: usar emoji dinámico en lugar de 🌿 hardcodeado ──
+        const nameSpan = document.createElement('span');
+        nameSpan.className = 'product-name';
+        nameSpan.innerHTML = `${emoji} ${nombre}`;
+
+        // ✅ Badge solo cuando NO está disponible
+        if (!disponible) {
+          const badge = document.createElement('span');
+          badge.className = 'sin-stock-badge';
+          badge.textContent = 'SIN DISPONIBILIDAD';
+          nameSpan.appendChild(badge);
+        }
+
+        // Controles: input + botón con la unidad
+        const controls = document.createElement('div');
+        controls.className = 'product-controls';
+
+        const input = document.createElement('input');
+        input.type             = 'number';
+        input.className        = 'qty-input';
+        input.dataset.product  = nombre;
+        input.dataset.unidad   = unidad;
+        input.value            = 0;
+        input.min              = 0;
+        input.disabled         = !disponible;
+        input.addEventListener('change', updateCount);
+
+        const btn = document.createElement('button');
+        btn.className        = 'cajas-btn';
+        btn.dataset.unidad   = unidad;
+        btn.textContent      = unidad;
+        btn.disabled         = !disponible;
+        btn.onclick          = () => setCajas(btn);
+
+        controls.appendChild(input);
+        controls.appendChild(btn);
+        row.appendChild(nameSpan);
+        row.appendChild(controls);
+        container.appendChild(row);
+      });
+    }
+
+    // ── Carga productos desde el Apps Script (GET) ───────────────
+    async function cargarProductos() {
+      try {
+        const res      = await fetch(APPS_SCRIPT_URL);
+        const productos = await res.json();
+
+        if (productos.error) throw new Error(productos.error);
+        renderProductos(productos);
+
+      } catch (err) {
+        document.getElementById('productList').innerHTML =
+          `<div class="loading-msg" style="color:#dc2626;">
+             ❌ No se pudieron cargar los productos.<br>
+             <small>${err.message}</small>
+           </div>`;
+        console.error('Error cargando productos:', err);
+      }
+    }
+
+    // ── Enviar pedido (POST) ─────────────────────────────────────
+    async function enviarPedido() {
+      const fecha      = document.getElementById('fecha').value;
+      const tiendaSel  = document.getElementById('tienda');
+      const tienda     = tiendaSel.value;
+      const tiendaNombre = tiendaSel.options[tiendaSel.selectedIndex]?.text || '';
+      const encargado  = document.getElementById('encargado').value.trim();
+
+      if (!fecha || !tienda || !encargado) {
+        showToast('⚠️ Por favor completa todos los campos del pedido.', 'error');
+        return;
+      }
+
+      const productos = [];
+      document.querySelectorAll('.qty-input').forEach(inp => {
+        const qty = parseFloat(inp.value) || 0;
+        if (qty > 0) {
+          productos.push({
+            producto: inp.dataset.product,
+            cantidad: qty,
+            unidad:   inp.dataset.unidad || 'CAJA'
+          });
+        }
+      });
+
+      if (productos.length === 0) {
+        showToast('⚠️ Agrega al menos un producto con cantidad mayor a 0.', 'error');
+        return;
+      }
+
+      const btn    = document.getElementById('submitBtn');
+      btn.disabled = true;
+      btn.textContent = '⏳ Enviando...';
+
+      const payload = { fecha, tienda, tiendaNombre, encargado, productos };
+
+      try {
+        await fetch(APPS_SCRIPT_URL, {
+          method:  'POST',
+          mode:    'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body:    JSON.stringify(payload)
+        });
+        showToast('✅ ¡Pedido enviado correctamente!', 'success');
+        document.querySelectorAll('.qty-input').forEach(inp => inp.value = 0);
+        updateCount();
+      } catch (err) {
+        showToast('❌ Error al enviar el pedido. Intenta de nuevo.', 'error');
+      } finally {
+        btn.disabled    = false;
+        btn.textContent = '📤 Enviar Pedido';
+      }
+    }
+
+    // Ejecutar al cargar
+    cargarProductos();
+  </script>
+</body>
+</html>
